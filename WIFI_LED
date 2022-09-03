@@ -1,0 +1,94 @@
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+
+//Definition des E/S
+#define pin_led_rouge 14
+#define pin_led_verte 16
+
+
+const char WiFiPassword[] = "12345678";
+const char AP_NameChar[] = "InnovationOrano" ;
+ 
+//Objet WebServer
+WiFiServer server(80);
+ 
+//En gros ma page WEB dynamique
+String header = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+String html_1 = "    <!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'/><meta charset='utf-8'><style>body {font-size:140%;}#main {display: table; margin: auto;  padding: 0 10px 0 10px; } h2,{text-align:center; } .button1 { padding:10px 10px 10px 10px; width:100%;  background-color: #14b73a; font-size: 120%;}.button2 { padding:10px 10px 10px 10px; width:100%;  background-color: #f51000; font-size: 120%;}</style><title>LED Control</title></head><body><div id='main'><h2>Version 1 | Test LED control </h2>";
+String html_LED = "";
+String html_2=  "<form id='F1' action='LED_VERTE_ON'><input class='button1' type='submit' value='ON / OFF' ></form> <br>";
+String html_3 = "<form id='F2' action='LED_ROUGE_ON'><input class='button2' type='submit' value='ON / OFF' ></form> <br>";
+String html_4 = "</div></body></html>";
+ 
+String request = "";
+ int etatV = 1;
+ int etatR = 1;
+ 
+void setup() 
+{
+
+    //On definit les GPIO en sortie
+    pinMode(pin_led_rouge, OUTPUT); 
+    pinMode(pin_led_verte, OUTPUT);
+
+    //On initialise les LEDs en LOW
+    digitalWrite(pin_led_rouge,LOW);
+    digitalWrite(pin_led_verte,LOW);
+
+    //Variables
+   
+
+    //Pour la page WEB
+    boolean conn = WiFi.softAP(AP_NameChar, WiFiPassword);
+    server.begin();
+ 
+}
+ 
+void loop() 
+{
+    // Check if a client has connected
+    WiFiClient client = server.available();
+    if (!client)  {  return;  }
+ 
+    // Read the first line of the request
+    request = client.readStringUntil('\r');
+ 
+    if ( request.indexOf("LED_VERTE_ON") > 0 ) 
+     { 
+      if (etatV== 0){
+        digitalWrite (pin_led_verte, HIGH);
+        etatV = 1;
+      }
+      else if (etatV==1){
+        digitalWrite (pin_led_verte, LOW);
+        etatV= 0;
+      }
+      }
+
+     if ( request.indexOf("LED_ROUGE_ON") > 0 ) 
+     { 
+      if (etatR== 0){
+        digitalWrite (pin_led_rouge, HIGH);
+        etatR = 1;
+      }
+      else if (etatR==1){
+        digitalWrite (pin_led_rouge, LOW);
+        etatR= 0;
+      }
+      }
+ 
+    client.flush();
+ 
+    client.print( header );
+    client.print( html_1 );    
+    client.print( html_LED );
+    client.print( html_2 );
+    client.print( html_3 );
+    client.print( html_4);
+
+         
+ 
+    delay(5);
+  // The client will actually be disconnected when the function returns and 'client' object is detroyed
+ 
+} // void loop()
