@@ -14,7 +14,7 @@ WiFiServer server(80);
  
 //En gros ma page WEB dynamique
 String header = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-String html_1 = "    <!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'/><meta charset='utf-8'><style>body {font-size:140%;}#main {display: table; margin: auto;  padding: 0 10px 0 10px; } h2,{text-align:center; } .button1 { padding:10px 10px 10px 10px; width:100%;  background-color: #14b73a; font-size: 120%;}.button2 { padding:10px 10px 10px 10px; width:100%;  background-color: #f51000; font-size: 120%;}</style><title>LED Control</title></head><body><div id='main'><h2>Version 1 | Test LED control </h2>";
+String html_1 = "    <!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'/><meta charset='utf-8'><style>body {font-size:140%;}#main {display: table; margin: auto;  padding: 0 10px 0 10px; } h2,{text-align:center; } .button1 { padding:10px 10px 10px 10px; width:100%;  background-color: #28bd28e6; font-size: 120%;}.button2 { padding:10px 10px 10px 10px; width:100%;  background-color: #f51000; font-size: 120%;}</style><title> ORANO Innovation </title></head><body><div id='main'><h2>Test LED control</h2>";
 String html_LED = "";
 String html_2=  "<form id='F1' action='LED_VERTE_ON'><input class='button1' type='submit' value='ON / OFF' ></form> <br>";
 String html_3 = "<form id='F2' action='LED_ROUGE_ON'><input class='button2' type='submit' value='ON / OFF' ></form> <br>";
