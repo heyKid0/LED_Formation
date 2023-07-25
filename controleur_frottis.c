@@ -100,4 +100,4 @@ for (compteur = 0; compteur < 5; compteur ++)
     digitalWrite    (buzz,LOW);
     delay(150);
   }
-}é
+}
