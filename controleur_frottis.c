@@ -1,61 +1,56 @@
-
-
 /*
-Conception d'un controleur factifs de frottis
+ Conception d'un controleur factifs de frottis
 
-Objectif    : Piloter l'indication de contamination à distance par une telecommande
-Cadre       : Pedagogique
-Harware     : Arduino nano / Leds (rouge & verte) / Interupteur / Buzzer actif 
+ Objectif    : Piloter l'indication de contamination a distance par une telecommande
+ Cadre       : Pedagogique / Formation
+ Harware     : Arduino nano / Leds (red & green & white) / Interupteur / Buzzer /  Recpteur IR
+ Type Carte  : Arduino nano
+ Processor   : Atmega 3280 (old bootLoarder)
 
-modifie 10 novembre 2022
+ modifie 20 fevrier 2023
+ */
 
-Pour la v2 : on utilise un Wemos D1 mini (probleme de recetption de MCU a Orano)
-Normalement on utilise une Arduino nano, cela explique les changements de Pin
-
-*/
-
-
+ #include <IRremote.h>
 
 
-#include <IRremote.h>
- 
+ //On defini les pins LEDs / capteur IR / Buzzer
+ const int RECV_PIN  = 10;
+ const int redPin    = 2; 
+ const int greenPin  = 3;
+ const int whitePin  = 4;
+ const int buzz      = 12;
 
-//On defini les pins LEDs et capteur IR
-const int RECV_PIN  = 5;
-const int redPin    = 0; 
-const int greenPin  = 4;
-const int buzz      = 2;
+ //On defini nos variables 
+ int togglestate1    = 0;   
+ int togglestate2    = 0;
+ int compteur;
 
-//On defini nos variables 
-int togglestate1    = 0;   
-int togglestate2    = 0;
-int compteur;
+ // On defini le recepteur IR et les objets de resultats
+ IRrecv irrecv(RECV_PIN);
+ decode_results results;
 
+ void setup(){
+   // Active le recpteur IR
+   irrecv.enableIRIn();
+   // On setup les LEDs / Buzzer en OUTPUT
+   pinMode(redPin, OUTPUT);
+   pinMode(greenPin, OUTPUT);
+   pinMode(whitePin, OUTPUT);
+   pinMode(buzz, OUTPUT);
 
-// On defini le recepteur IR et les objets de resultats
-IRrecv irrecv(RECV_PIN);
-decode_results results;
+   synchronisation();               // Foction pour indiuqer la mise en place du systeme 
+   digitalWrite(whitePin, HIGH);    // Temoin Lumineux de la mise sous tension du systeme
 
-void setup(){
-  // Active le recpteur IR
-  irrecv.enableIRIn();
-  // On setup les LEDs en OUTPUT
-  pinMode(redPin, OUTPUT);
-  pinMode(greenPin, OUTPUT);
-  pinMode(buzz,OUTPUT);
+ }
 
-  synchronisation(); // Foction pour indiuqer la mise en place du systeme 
-
-}
- 
 void loop(){
 
     if (irrecv.decode(&results)){
 
         switch(results.value){
         
-        case 0xFF18E7:        //Button flecge du haut | LED vert
-
+        case 0xFF10EF:        //Button flecge de XXX | LED vert
+        
         if(togglestate2==0){
         digitalWrite(greenPin, HIGH);
         delay(250);
@@ -68,8 +63,8 @@ void loop(){
         }
         break;
 
-        case 0xFF4AB5:        //Button Fleche du bas | LED rouge + buzzer 
-      
+        case 0xFF5AA5:        //Button Fleche de XXX | LED rouge + buzzer 
+        
         if(togglestate1==0){
         digitalWrite(redPin, HIGH);
         digitalWrite(buzz,HIGH);
@@ -105,6 +100,4 @@ for (compteur = 0; compteur < 5; compteur ++)
     digitalWrite    (buzz,LOW);
     delay(150);
   }
-}
-
-
+}é
